@@ -1,0 +1,410 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+}
+
+\newtheorem{theorem}{Theorem}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\cyc}{\mathrm{cyc}}
+\newcommand{\HS}{\mathrm{HS}}
+
+\title{\textbf{A Trace--SOS Proof of a Determinantal Inequality}}
+\author{Cubesteak}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Let \(A,B,C\in M_n(\mathbb C)\) be Hermitian positive definite matrices satisfying
+\(A+B+C=I_n\). We prove
+\[
+\det\!\bigl(I_n+6(A^3+B^3+C^3)\bigr)
+\ge
+5^n\det(A^2+B^2+C^2).
+\]
+The principal difficulty is that the stronger local Loewner-order comparison
+\[
+I_n+6(A^3+B^3+C^3)\succeq 5(A^2+B^2+C^2)
+\]
+fails in general. Thus one cannot expect an eigenvalue-by-eigenvalue proof.
+Instead, we pass to a global trace inequality, eliminate the matrix inverse by
+a variational identity, and prove the resulting quadratic functional is
+nonnegative through an explicit noncommutative sum-of-squares certificate.
+We also explain how the certificate can be recovered from a small
+semidefinite program.
+\end{abstract}
+
+\section{Introduction}
+
+Consider Hermitian positive definite matrices
+\[
+A,B,C\in M_n(\mathbb C),
+\qquad
+A+B+C=I_n.
+\]
+The problem is to prove
+\begin{equation}\label{eq:main}
+\det\!\bigl(I_n+6(A^3+B^3+C^3)\bigr)
+\ge
+5^n\det(A^2+B^2+C^2).
+\end{equation}
+
+For commuting matrices, one is naturally led toward scalar inequalities.
+The genuinely noncommutative problem is subtler. In particular, the tempting
+operator strengthening
+\begin{equation}\label{eq:false-local}
+I_n+6(A^3+B^3+C^3)
+\succeq
+5(A^2+B^2+C^2)
+\end{equation}
+is false in general. Hence a proof based on pointwise spectral domination is
+not available. The successful argument instead uses a global averaging
+mechanism: determinants are compared through the trace of a conjugated
+matrix, and cyclicity of the trace creates cancellations that have no scalar
+eigenvalue-by-eigenvalue analogue.
+
+The proof below has two layers. First, we give a short self-contained argument
+assuming an explicit sum-of-squares identity. Second, we explain how that
+identity can be found by a semidefinite-programming Gram-matrix ansatz.
+The argument and the SDP certificate presented here are based on the
+Math StackExchange answer \cite{cubesteak-mse}.
+
+\section{The determinant inequality}
+
+We write
+\[
+\langle X,Y\rangle_{\HS}:=\tr(X^*Y)
+\]
+for the Hilbert--Schmidt inner product.
+
+\begin{theorem}\label{thm:main}
+Let \(A,B,C\in M_n(\mathbb C)\) be Hermitian positive definite matrices with
+\(A+B+C=I_n\). Then
+\[
+\det\!\bigl(I_n+6(A^3+B^3+C^3)\bigr)
+\ge
+5^n\det(A^2+B^2+C^2).
+\]
+\end{theorem}
+
+\begin{proof}
+Set
+\[
+S:=A^2+B^2+C^2,
+\qquad
+T:=\frac15\bigl(I_n+6(A^3+B^3+C^3)\bigr).
+\]
+Since \(A,B,C\) are positive definite, both \(S\) and \(T\) are positive
+definite. The desired inequality is exactly
+\[
+\det S\le \det T.
+\]
+
+Consider
+\[
+M:=T^{-1/2}ST^{-1/2}\succ0.
+\]
+If \(\lambda_1,\dots,\lambda_n>0\) are the eigenvalues of \(M\), then
+\[
+\det M=\frac{\det S}{\det T},
+\qquad
+\tr M=\tr(T^{-1}S).
+\]
+The scalar AM--GM inequality therefore yields
+\begin{equation}\label{eq:amgm}
+\left(\frac{\det S}{\det T}\right)^{1/n}
+=
+(\lambda_1\cdots\lambda_n)^{1/n}
+\le
+\frac{\lambda_1+\cdots+\lambda_n}{n}
+=
+\frac{\tr(T^{-1}S)}{n}.
+\end{equation}
+Consequently, it is enough to prove
+\begin{equation}\label{eq:trace-target}
+\tr(T^{-1}S)\le n.
+\end{equation}
+
+We remove the inverse from \eqref{eq:trace-target} by introducing, for
+Hermitian \(X\),
+\begin{equation}\label{eq:Phi-def}
+\Phi(X):=
+\tr\!\bigl(I_n-2XS+XTXS\bigr).
+\end{equation}
+At \(X=T^{-1}\),
+\[
+\Phi(T^{-1})
+=
+n-\tr(T^{-1}S).
+\]
+In fact, \(T^{-1}\) is the minimizer of \(\Phi\). Indeed, writing
+\(Y:=X-T^{-1}\), a direct expansion gives
+\begin{align}
+\Phi(X)
+&=
+n-\tr(T^{-1}S)+\tr(YTYS) \notag\\
+&=
+n-\tr(T^{-1}S)
++
+\bigl\|T^{1/2}YS^{1/2}\bigr\|_{\HS}^2.
+\label{eq:variational-square}
+\end{align}
+Thus \eqref{eq:trace-target} follows once we prove
+\[
+\Phi(X)\ge0
+\qquad
+\text{for every Hermitian }X.
+\]
+
+To establish this positivity, define
+\[
+U:=2A-B-C,
+\qquad
+V:=C-B,
+\]
+and, for the fixed Hermitian matrix \(X\), set
+\begin{align*}
+P_1&=
+2(X-3I_n)+3UX-2XU-UXU+3VXV,\\
+P_2&=
+2(X-3I_n)+2UX-XU+2UXU,\\
+P_3&=
+2(X-3I_n)+UXU+3VXV-UXV+VXU,\\
+P_4&=
+2VX-XV-2UXV,\\
+P_5&=
+-VX+UXV+VXU.
+\end{align*}
+Here the cyclic sum
+\[
+\sum_{\cyc}F(A,B,C)
+\]
+means
+\[
+F(A,B,C)+F(B,C,A)+F(C,A,B),
+\]
+with \(U,V,P_1,\dots,P_5\) transformed simultaneously under the same cyclic
+permutation.
+
+The crucial algebraic certificate is
+\begin{equation}\label{eq:SOS}
+\boxed{
+\Phi(X)
+=
+\frac1{180}
+\sum_{\cyc}
+\left\langle
+A,\,
+P_1P_1^*
++P_2P_2^*
++3P_3P_3^*
++3P_4P_4^*
++3P_5P_5^*
+\right\rangle_{\HS}.
+}
+\end{equation}
+This is an identity in the noncommuting variables \(A,B,C,X\), subject only
+to \(A+B+C=I_n\); it is verified by direct expansion together with cyclicity
+of the trace.
+
+Every summand on the right-hand side of \eqref{eq:SOS} is nonnegative. Indeed,
+for \(A\succeq0\) and an arbitrary matrix \(P\),
+\[
+\langle A,PP^*\rangle_{\HS}
+=
+\tr(APP^*)
+=
+\tr(P^*AP)
+=
+\|A^{1/2}P\|_{\HS}^2
+\ge0.
+\]
+The same argument applies to the cyclic copies involving \(B\) and \(C\).
+Hence
+\[
+\Phi(X)\ge0
+\qquad
+\text{for every Hermitian }X.
+\]
+In particular,
+\[
+0\le\Phi(T^{-1})
+=
+n-\tr(T^{-1}S),
+\]
+so \eqref{eq:trace-target} holds. Returning to \eqref{eq:amgm},
+\[
+\left(\frac{\det S}{\det T}\right)^{1/n}\le1,
+\]
+and therefore \(\det S\le\det T\). Multiplying out the definition of \(T\)
+gives \eqref{eq:main}.
+\end{proof}
+
+\begin{remark}
+The symmetric choice
+\[
+A=B=C=\frac13I_n
+\]
+gives equality in \eqref{eq:main}.
+\end{remark}
+
+\section{How the SOS certificate is found}
+
+The polynomials \(P_1,\dots,P_5\) in \eqref{eq:SOS} look mysterious if they
+are presented without explanation. They arise naturally from a Gram-matrix
+search.
+
+Define the column vector of noncommutative matrix words
+\begin{equation}\label{eq:q}
+q:=
+\begin{pmatrix}
+X-3I_n\\
+UX\\
+XU\\
+UXU\\
+VXV\\
+VX\\
+XV\\
+UXV\\
+VXU
+\end{pmatrix}.
+\end{equation}
+For a Hermitian \(9\times9\) matrix \(H=(H_{ij})\) and \(A\succeq0\), write
+\begin{equation}\label{eq:Hnorm}
+\|q\|_{H\otimes A\otimes I}^{2}
+:=
+\sum_{i,j=1}^{9}
+H_{ij}\,
+\tr(q_i^*Aq_j).
+\end{equation}
+We seek a positive semidefinite Gram matrix \(H\succeq0\) such that
+\begin{equation}\label{eq:ansatz}
+\Phi(X)
+=
+\sum_{\cyc}
+\|q\|_{H\otimes A\otimes I}^{2}.
+\end{equation}
+
+Expanding the right-hand side of \eqref{eq:ansatz}, using
+\(A+B+C=I_n\), and identifying trace words modulo cyclic permutation produces
+a finite system of linear equations in the entries of \(H\). The positivity
+condition \(H\succeq0\) turns the search into a semidefinite feasibility
+problem. A rank-five solution is
+\begin{equation}\label{eq:H}
+H=\frac1{180}
+\begin{pmatrix}
+20&10&-6&8&24&0&0&-6&6\\
+10&13&-8&1&9&0&0&0&0\\
+-6&-8&5&0&-6&0&0&0&0\\
+8&1&0&8&6&0&0&-3&3\\
+24&9&-6&6&36&0&0&-9&9\\
+0&0&0&0&0&15&-6&-15&-3\\
+0&0&0&0&0&-6&3&6&0\\
+-6&0&0&-3&-9&-15&6&18&0\\
+6&0&0&3&9&-3&0&0&6
+\end{pmatrix}.
+\end{equation}
+This matrix admits the factorization
+\begin{equation}\label{eq:Hfactor}
+H
+=
+\frac1{180}
+L^*
+\operatorname{diag}(1,1,3,3,3)
+L,
+\end{equation}
+where
+\begin{equation}\label{eq:L}
+L=
+\begin{pmatrix}
+2&3&-2&-1&3&0&0&0&0\\
+2&2&-1&2&0&0&0&0&0\\
+2&0&0&1&3&0&0&-1&1\\
+0&0&0&0&0&2&-1&-2&0\\
+0&0&0&0&0&-1&0&1&1
+\end{pmatrix}.
+\end{equation}
+The five rows of \(L\), applied to the word vector \(q\), are exactly
+\(P_1,\dots,P_5\). Indeed,
+\[
+Lq=
+\begin{pmatrix}
+P_1\\
+P_2\\
+P_3\\
+P_4\\
+P_5
+\end{pmatrix}.
+\]
+Therefore \eqref{eq:Hfactor} converts the Gram representation
+\eqref{eq:ansatz} into
+\[
+\frac1{180}
+\sum_{\cyc}
+\left(
+\tr(P_1^*AP_1)
++\tr(P_2^*AP_2)
++3\tr(P_3^*AP_3)
++3\tr(P_4^*AP_4)
++3\tr(P_5^*AP_5)
+\right),
+\]
+which, by cyclicity of the trace, is exactly the SOS formula
+\eqref{eq:SOS}.
+
+Thus the proof has a useful conceptual division:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item the determinant is reduced to a trace inequality by AM--GM;
+\item a variational square removes \(T^{-1}\);
+\item a finite SDP discovers a positive semidefinite Gram matrix;
+\item a rank-five factorization of that Gram matrix produces the five
+      explicit noncommutative squares.
+\end{enumerate}
+Once \(H\) and \(L\) are known, the final proof is purely algebraic and no
+numerical optimization remains.
+
+\section{Discussion}
+
+The essential feature of the argument is that it does not attempt to compare
+\[
+I_n+6(A^3+B^3+C^3)
+\quad\text{and}\quad
+5(A^2+B^2+C^2)
+\]
+in Loewner order. Instead, it passes to the scalar global quantity
+\(\tr(T^{-1}S)\), where cyclic trace identities make noncommutative
+cancellations available. The SOS representation then certifies this global
+positivity exactly. In this sense, the obstruction to a local spectral proof
+is not bypassed by approximation; it is replaced by a different invariant
+that is better adapted to noncommutativity.
+
+\begin{thebibliography}{9}
+
+\bibitem{cubesteak-mse}
+Cubesteak,
+\emph{Answer to ``How does one prove the determinant inequality
+\(\det(6(A^3+B^3+C^3)+I_n)\ge
+5^n\det(A^2+B^2+C^2)\)?''},
+Mathematics Stack Exchange, answer 5147902,
+\url{https://math.stackexchange.com/questions/860294/how-does-one-prove-the-determinant-inequality-det-left6a3b3c3i-n-ri/5147902#5147902},
+accessed September 4, 2026.
+
+\end{thebibliography}
+
+\end{document}
