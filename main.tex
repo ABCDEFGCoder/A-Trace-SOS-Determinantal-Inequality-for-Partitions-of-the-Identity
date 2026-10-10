@@ -1,0 +1,763 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{array,booktabs,microtype,xurl,placeins}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue,
+  pdftitle={A Trace-SOS Determinantal Inequality for Partitions of the Identity},
+  pdfauthor={Zixuan Ye and GPT-6 Astra}}
+\allowdisplaybreaks[1]
+\setlength{\emergencystretch}{1em}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Rea}{\operatorname{Re}}
+\newcommand{\HS}{\mathrm{HS}}
+\newcommand{\Id}{I_n}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\gH}{\mathscr H}
+\newcommand{\gQ}{\mathscr Q}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\nrm}[1]{\lVert #1\rVert}
+\newcommand{\word}[1]{\mathtt{#1}}
+
+\title{\textbf{A Trace--SOS Determinantal Inequality\\
+for Partitions of the Identity}}
+\author{Zixuan Ye \and GPT-6 Astra}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Let \(A_1,\ldots,A_m\) be positive semidefinite Hermitian \(n\times n\)
+matrices whose sum is the identity. We prove
+\[
+ \det\!\left(\Id+m(m-1)\sum_{i=1}^m A_i^3\right)
+ \ge (2m-1)^n\det\!\left(\sum_{i=1}^m A_i^2\right).
+\]
+
+The argument extends Cubesteak's trace--sum-of-squares approach to the
+three-matrix case. Its main ingredient is an explicit family of Gram
+matrices, valid for every \(m\ge3\), together with an analytic
+decomposition proving their positive semidefiniteness. In fact, we obtain
+a stronger quadratic trace inequality and the corresponding inverse-trace
+bound. The constant is sharp. For positive definite matrices and
+\(m\ge3\), equality holds precisely when all matrices equal \(\Id/m\);
+for \(m=1,2\), the determinant inequality is an identity. A single
+optional Python certificate verifies the polynomial trace identity
+using exact rational arithmetic and an indeterminate parameter.
+\end{abstract}
+
+\section{Introduction and main result}
+
+Cubesteak proved the following inequality on Mathematics Stack Exchange
+\cite{cubesteak}: if \(A,B,C\) are positive definite Hermitian matrices
+with \(A+B+C=\Id\), then
+\[
+ \det\!\bigl(\Id+6(A^3+B^3+C^3)\bigr)
+ \ge 5^n\det(A^2+B^2+C^2).
+\]
+
+The proof compares determinants through an inverse-trace inequality,
+removes the inverse by a quadratic variational identity, and establishes
+positivity by a noncommutative sum-of-squares decomposition.
+We retain this proof framework and its notation \(S,T,\Phi\).
+The new ingredient is a uniform Gram family that treats an arbitrary
+number of summands.
+
+Throughout, \(m,n\) are positive integers, \(\Id\) is the identity in
+\(M_n(\mathbb C)\), and \(A_i=A_i^*\succeq0\) satisfy
+\[
+ \sum_{i=1}^m A_i=\Id.
+\]
+
+We use the Hilbert--Schmidt inner product and norm
+\[
+ \ip{U}{V}_{\HS}=\tr(U^*V),\qquad
+ \nrm{U}_{\HS}^2=\tr(U^*U).
+\]
+
+Set
+\begin{equation}\label{eq:ST}
+ c_m=m(m-1),\qquad d_m=2m-1,\qquad
+ S=\sum_i A_i^2,\qquad R=\sum_i A_i^3,\qquad
+ T=\frac{\Id+c_mR}{d_m}.
+\end{equation}
+
+These definitions are valid on the positive semidefinite boundary.
+Indeed,
+\begin{equation}\label{eq:positive-ST}
+ S-\frac1m\Id=\sum_i\left(A_i-\frac1m\Id\right)^2\succeq0,
+ \qquad T\succeq\frac1{d_m}\Id,
+\end{equation}
+so \(S\) and \(T\) are always positive definite.
+
+\begin{theorem}\label{thm:main}
+For the matrices above,
+\begin{equation}\label{eq:trace-bound}
+ \tr(T^{-1}S)\le n
+\end{equation}
+and
+\begin{equation}\label{eq:det-bound}
+ \det\!\left(\Id+m(m-1)\sum_i A_i^3\right)
+ \ge(2m-1)^n\det\!\left(\sum_i A_i^2\right).
+\end{equation}
+The constant \((2m-1)^n\) is sharp for each \(m,n\).
+If every \(A_i\) is positive definite and \(m\ge3\), equality in
+\eqref{eq:det-bound} holds if and only if
+\(A_1=\cdots=A_m=\Id/m\).
+For \(m=1,2\), both \eqref{eq:trace-bound} and
+\eqref{eq:det-bound} are equalities for every admissible tuple.
+\end{theorem}
+
+The positive definiteness assumption in the equality classification
+matters. For example, when \(m\ge2\), the positive semidefinite tuple
+\[
+ A_1=0,\qquad A_2=\cdots=A_m=\frac1{m-1}\Id
+\]
+also gives equality, since \(S=T=\Id/(m-1)\).
+We do not classify all equality cases on the boundary.
+
+\section{The trace--variational reduction}
+
+For a Hermitian matrix \(X\), define
+\begin{equation}\label{eq:KB}
+ \cK(X)=\sum_i A_iXA_i,\qquad
+ \cB(X)=\tr(XTXS)-\nrm{\cK(X)}_{\HS}^2
+\end{equation}
+and
+\begin{equation}\label{eq:Phi}
+ \Phi(X)=\tr(\Id-2XS+XTXS).
+\end{equation}
+
+The expression \(\tr(XTXS)\) is real and nonnegative, since it equals
+\(\nrm{T^{1/2}XS^{1/2}}_{\HS}^2\).
+
+\begin{lemma}\label{lem:reduction}
+For every Hermitian \(X\),
+\begin{align}
+ \Phi(X)&=\nrm{\cK(X)-\Id}_{\HS}^2+\cB(X),
+ \label{eq:Phi-K}\\
+ \Phi(X)&=n-\tr(T^{-1}S)
+ +\nrm{T^{1/2}(X-T^{-1})S^{1/2}}_{\HS}^2.
+ \label{eq:Phi-square}
+\end{align}
+Consequently, if \(\cB(X)\ge0\) for all Hermitian \(X\), then
+\eqref{eq:trace-bound} and \eqref{eq:det-bound} hold.
+\end{lemma}
+
+\begin{proof}
+Since \(\cK(X)\) is Hermitian and
+\(\tr\cK(X)=\tr(XS)\), expansion of the squared norm proves
+\eqref{eq:Phi-K}. Put \(Y=X-T^{-1}\). Expansion of \(XTX\) gives
+\[
+ XTX=YTY+2Y+T^{-1},
+\]
+which proves \eqref{eq:Phi-square}. In particular,
+\(\Phi(T^{-1})=n-\tr(T^{-1}S)\). Nonnegativity in
+\eqref{eq:Phi-K} therefore implies \eqref{eq:trace-bound}.
+
+For the determinant conclusion, the matrix
+\(M=T^{-1/2}ST^{-1/2}\) is positive definite. The arithmetic--geometric
+mean inequality for its eigenvalues gives
+\begin{equation}\label{eq:AMGM}
+ \left(\frac{\det S}{\det T}\right)^{1/n}
+ =(\det M)^{1/n}
+ \le\frac{\tr M}{n}
+ =\frac{\tr(T^{-1}S)}{n}\le1.
+\end{equation}
+
+Using \eqref{eq:ST} yields \eqref{eq:det-bound}.
+\end{proof}
+
+We shall prove the following stronger assertion.
+\begin{theorem}\label{thm:quadratic}
+For every admissible tuple \(A_1,\ldots,A_m\) and every Hermitian \(X\),
+\begin{equation}\label{eq:quadratic}
+ \cB(X)\ge0.
+\end{equation}
+\end{theorem}
+
+The rest of the proof constructs a Gram representation of
+\(d_m\cB(X)\) and proves positivity of its coefficient matrix
+analytically.
+
+\section{A uniform trace--Gram identity}
+
+Fix \(m\ge3\) and write \(k=m-1\ge2\). For each \(i\), let
+\(J_i=\{1,\ldots,m\}\setminus\{i\}\). For \(j,l\in J_i\), define
+\begin{align}
+ E_{ij}&=(A_j-A_i)XA_j,\qquad
+ F_{ij}=A_jX(A_j-A_i)=E_{ij}^*, \label{eq:EF}\\
+ Z_{i;jl}&=(A_j-A_i)X(A_l-A_i)\qquad(j\ne l).
+ \label{eq:Z}
+\end{align}
+
+Let \(w_i\) be the column of all \(E_{ij}\), all \(F_{ij}\), and all
+\(Z_{i;jl}\) with ordered pairs \(j\ne l\), in any fixed order.
+It has \(2k+k(k-1)=k(k+1)\) components.
+The corresponding abstract component labels are \(E_j,F_j,Z_{jl}\).
+
+Define a real symmetric matrix \(\gH_k\) on these labels by
+Table~\ref{tab:gram}; entries in symmetric positions are equal.
+The table is unchanged by a common relabeling of the \(k\) indices.
+It defines a new parameterized family, distinct from the fixed Gram
+matrix in Cubesteak's three-matrix proof.
+
+\begin{table}[htbp]
+\centering
+\caption{The entries of \(\gH_k\). Every \(Z\)-label has distinct internal
+indices. The conditions in each block are exhaustive.}
+\label{tab:gram}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{lll}
+\toprule
+Row and column & Condition & Entry\\
+\midrule
+\(E_j,E_j\) & & \(k(k+5)/2\)\\
+\(E_j,E_l\) & \(j\ne l\) & \((k-3)/2\)\\
+\(F_j,F_j\) & & \(k(k+5)/2\)\\
+\(F_j,F_l\) & \(j\ne l\) & \((5k+1)/2\)\\
+\(E_j,F_j\) & & \(-(k+1)(k+2)/2\)\\
+\(E_j,F_l\) & \(j\ne l\) & \(-(k+1)\)\\
+\(E_j,Z_{lh}\) & \(j=l\) & \(k/2\)\\
+\(E_j,Z_{lh}\) & \(j\ne l\) & \(-1/2\)\\
+\(F_j,Z_{lh}\) & \(j=l\) & \(-(k-1)/2\)\\
+\(F_j,Z_{lh}\) & \(j=h\) & \(0\)\\
+\(F_j,Z_{lh}\) & \(j\notin\{l,h\}\) & \(1/2\)\\
+\(Z_{jl},Z_{jl}\) & & \(k-1\)\\
+\(Z_{jl},Z_{ph}\) & distinct labels; \(j=p\) or \(l=h\) & \(-1/2\)\\
+\(Z_{jl},Z_{ph}\) & distinct labels; \(j\ne p,\ l\ne h\) & \(0\)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For a Hermitian matrix \(A\) and a column \(w\) of matrices indexed by
+these labels, put
+\begin{equation}\label{eq:gram-functional}
+ \gQ_k(A;w)=\sum_{a,b}(\gH_k)_{ab}\tr(w_a^*Aw_b).
+\end{equation}
+
+The sum is real, by Hermitian symmetry.
+
+\begin{proposition}\label{prop:identity}
+For every Hermitian \(X\),
+\begin{equation}\label{eq:universal-gram}
+ d_m\cB(X)=\sum_{i=1}^m\gQ_k(A_i;w_i).
+\end{equation}
+Equivalently,
+\begin{equation}\label{eq:expanded-target}
+ \sum_i\gQ_k(A_i;w_i)
+ =\tr(X^2S)+m(m-1)\tr(XRXS)
+   -(2m-1)\nrm{\cK(X)}_{\HS}^2.
+\end{equation}
+This algebraic identity requires only Hermitian symmetry and
+\(\sum_iA_i=\Id\), not positivity of the \(A_i\).
+\end{proposition}
+
+\begin{proof}
+Expand \eqref{eq:gram-functional} using
+\eqref{eq:EF}--\eqref{eq:Z} and Table~\ref{tab:gram}.
+Appendix~\ref{app:identity} gives the full coefficient table, together
+with the finite index-summation rules used to obtain it.
+The resulting three nonzero coefficients are \(1,m(m-1)\), and
+\(1-2m\), on the respective trace words in
+\eqref{eq:expanded-target}. This proves that equation.
+Finally, \(d_mT=\Id+c_mR\) gives \eqref{eq:universal-gram}.
+\end{proof}
+
+\section{Analytic positivity of the Gram family}
+
+We prove positivity for vectors in an arbitrary complex Hilbert space
+\(V\), with inner product linear in its second argument.
+For a vector of components
+\[
+ \boldsymbol{\xi}=(\ell_j,r_j,z_{jl})_{1\le j,l\le k,\ j\ne l},
+\]
+where the \(\ell\), \(r\), and \(z\) entries have the respective
+\(E\), \(F\), and \(Z\) labels, write
+\[
+ Q_k(\boldsymbol{\xi})
+ =\sum_{a,b}(\gH_k)_{ab}\ip{\xi_a}{\xi_b}.
+\]
+
+All norms and inner products in this section are those of \(V\).
+
+\subsection{An orthogonal decomposition of the ordered-pair components}
+
+Define
+\[
+ \ell_0=\frac1k\sum_j\ell_j,\qquad
+ r_0=\frac1k\sum_jr_j,\qquad
+ z_0=\frac1{k(k-1)}\sum_{j\ne l}z_{jl},
+ \qquad
+ \ell_j^\circ=\ell_j-\ell_0,\quad r_j^\circ=r_j-r_0.
+\]
+
+Let
+\[
+ u_j=\sum_{l\ne j}z_{jl}-(k-1)z_0,\qquad
+ v_j=\sum_{l\ne j}z_{lj}-(k-1)z_0.
+\]
+
+Both \(\sum_ju_j\) and \(\sum_jv_j\) vanish. Put
+\begin{equation}\label{eq:alpha-beta}
+ \alpha_j=
+ \begin{cases}
+ (u_j+v_j)/(2(k-2)),&k>2,\\
+ 0,&k=2,
+ \end{cases}
+ \qquad
+ \beta_j=\frac{u_j-v_j}{2k},
+\end{equation}
+and
+\begin{equation}\label{eq:residual}
+ \omega_{jl}=z_{jl}-z_0-\alpha_j-\alpha_l-\beta_j+\beta_l
+ \qquad(j\ne l).
+\end{equation}
+
+For \(k=2\), one has \(u_j+v_j=0\), so all formulas below still hold.
+
+We have \(\sum_j\alpha_j=\sum_j\beta_j=0\), and every row sum and
+column sum of the residual array is zero. In particular,
+\begin{align}
+ a_j:=\sum_{l\ne j}z_{jl}
+  &=(k-1)z_0+(k-2)\alpha_j+k\beta_j, \label{eq:rows}\\
+ b_j:=\sum_{l\ne j}z_{lj}
+  &=(k-1)z_0+(k-2)\alpha_j-k\beta_j. \label{eq:columns}
+\end{align}
+
+The four arrays in
+\[
+ z_{jl}=z_0+(\alpha_j+\alpha_l)+(\beta_j-\beta_l)+\omega_{jl}
+\]
+are mutually orthogonal in the direct-sum Hilbert space indexed by
+ordered pairs \(j\ne l\).
+Indeed, the zero sums give orthogonality to the constant array.
+The \(\alpha\)-array is symmetric and the \(\beta\)-array is
+antisymmetric under \(j\leftrightarrow l\).
+Orthogonality to the residual array follows from its zero row and
+column sums. Expanding the two remaining squared norms yields
+\begin{equation}\label{eq:pair-norm}
+ \sum_{j\ne l}\nrm{z_{jl}}^2
+ =k(k-1)\nrm{z_0}^2
+ +2(k-2)\sum_j\nrm{\alpha_j}^2
+ +2k\sum_j\nrm{\beta_j}^2
+ +\sum_{j\ne l}\nrm{\omega_{jl}}^2.
+\end{equation}
+
+\subsection{Completion of squares}
+
+For a real symmetric \(2\times2\) matrix \(N\), abbreviate
+\[
+ \ip{(a,b)}{N(a,b)}
+ =N_{11}\nrm a^2+2N_{12}\Rea\ip a b+N_{22}\nrm b^2.
+\]
+Define
+\begin{align}
+ N_0&=\frac14
+ \begin{pmatrix}
+ 4k^2+k+7&-(6k^2+5k+1)\\
+ -(6k^2+5k+1)&12k^2+k-1
+ \end{pmatrix},\label{eq:N0}\\
+ N_1&=\frac1{k+2}
+ \begin{pmatrix}
+ (k+1)(2k+3)&-(k+1)^2\\
+ -(k+1)^2&k^2+k-1
+ \end{pmatrix}.\label{eq:N1}
+\end{align}
+
+\begin{lemma}\label{lem:Gram-positive}
+For every integer \(k\ge2\),
+\begin{align}
+ Q_k(\boldsymbol{\xi})
+ ={}&k(k-1)\nrm{z_0+\tfrac12(\ell_0-r_0)}^2
+       +k\ip{(\ell_0,r_0)}{N_0(\ell_0,r_0)}
+       \notag\\
+ &+(k-2)(k+2)\sum_j
+    \nrm{\alpha_j+\frac{k+1}{2(k+2)}
+                    (\ell_j^\circ-r_j^\circ)}^2
+       \notag\\
+ &+k^2\sum_j
+    \nrm{\beta_j+
+             \frac{(k+1)\ell_j^\circ-(k-1)r_j^\circ}{2k}}^2
+       \notag\\
+ &+\sum_j\ip{(\ell_j^\circ,r_j^\circ)}
+                   {N_1(\ell_j^\circ,r_j^\circ)}
+       +k\sum_{j\ne l}\nrm{\omega_{jl}}^2.
+ \label{eq:completed-Gram}
+\end{align}
+Consequently, \(\gH_k\succeq0\) for \(k\ge2\), and
+\(\gH_k\succ0\) for \(k\ge3\).
+For \(k=2\), the equality \(Q_2(\boldsymbol{\xi})=0\) implies
+\begin{equation}\label{eq:k2-kernel}
+ \ell_j^\circ=r_j^\circ=0\quad(j=1,2),
+ \qquad 5\ell_0=7r_0.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For a transparent verification of \eqref{eq:completed-Gram}, put
+\(\ell_\Sigma=\sum_j\ell_j\), \(r_\Sigma=\sum_jr_j\), and
+\(z_\Sigma=\sum_{j\ne l}z_{jl}\).
+Reading off the six blocks of Table~\ref{tab:gram} gives
+\begin{align}
+ Q_k(\boldsymbol{\xi})={}&
+ \frac{(k+1)(k+3)}2\sum_j\nrm{\ell_j}^2
+   +\frac{k-3}2\nrm{\ell_\Sigma}^2
+ \notag\\
+ &+\frac{(k-1)(k+1)}2\sum_j\nrm{r_j}^2
+   +\frac{5k+1}2\nrm{r_\Sigma}^2
+ \notag\\
+ &-k(k+1)\Rea\sum_j\ip{\ell_j}{r_j}
+   -2(k+1)\Rea\ip{\ell_\Sigma}{r_\Sigma}
+ \notag\\
+ &+k\sum_{j\ne l}\nrm{z_{jl}}^2
+   -\frac12\sum_j\bigl(\nrm{a_j}^2+\nrm{b_j}^2\bigr)
+ \notag\\
+ &+\Rea\left((k+1)\sum_j\ip{\ell_j}{a_j}
+                    -\ip{\ell_\Sigma}{z_\Sigma}\right)
+ \notag\\
+ &+\Rea\left(\ip{r_\Sigma}{z_\Sigma}
+              -k\sum_j\ip{r_j}{a_j}-\sum_j\ip{r_j}{b_j}\right).
+ \label{eq:uncompleted}
+\end{align}
+
+For instance, the \(ZZ\)-block has diagonal \(k-1\) and off-diagonal
+entry \(-1/2\) for equal rows or equal columns. Its contribution is
+exactly the fourth line of \eqref{eq:uncompleted}.
+The two subsequent lines are the \(EZ\)- and \(FZ\)-contributions.
+
+Substitute \eqref{eq:rows}--\eqref{eq:pair-norm} and
+\(\ell_j=\ell_0+\ell_j^\circ\), \(r_j=r_0+r_j^\circ\)
+into \eqref{eq:uncompleted}. Terms between constant and zero-sum
+components vanish. The coefficients of
+\(\nrm{z_0}^2,\sum_j\nrm{\alpha_j}^2,
+\sum_j\nrm{\beta_j}^2\) are, respectively,
+\(k(k-1),(k-2)(k+2),k^2\).
+Completing these three squares leaves the constant block \(kN_0\),
+the zero-sum block \(N_1\), and
+\(k\sum_{j\ne l}\nrm{\omega_{jl}}^2\), exactly as in
+\eqref{eq:completed-Gram}.
+
+Both upper-left entries in \eqref{eq:N0}--\eqref{eq:N1} are positive,
+and direct determinant expansion gives
+\begin{equation}\label{eq:two-determinants}
+ \det N_0=\frac{(k-2)(k-1)^2(3k+1)}4,\qquad
+ \det N_1=\frac{(k+1)(k^2-2)}{k+2}.
+\end{equation}
+Thus \(N_0\succeq0\) and \(N_1\succ0\) for \(k\ge2\);
+both are positive definite for \(k\ge3\). All terms in
+\eqref{eq:completed-Gram} are nonnegative, proving
+\(\gH_k\succeq0\).
+
+If \(k\ge3\) and \(Q_k(\boldsymbol{\xi})=0\), the \(N_0\)- and
+\(N_1\)-terms force
+\(\ell_0=r_0=\ell_j^\circ=r_j^\circ=0\).
+The other squares then force \(z_0=\alpha_j=\beta_j=\omega_{jl}=0\).
+Hence every component is zero, proving strict positivity.
+For \(k=2\),
+\[
+ N_0=\frac14\begin{pmatrix}25&-35\\-35&49\end{pmatrix}.
+\]
+
+The \(N_1\)-terms force \(\ell_j^\circ=r_j^\circ=0\);
+the \(N_0\)-term forces \(5\ell_0=7r_0\).
+This proves the necessary conditions \eqref{eq:k2-kernel}.
+\end{proof}
+
+\section{Proofs of the inequalities and the equality statement}
+
+\begin{proof}[Proof of Theorem~\ref{thm:quadratic}]
+Suppose first that \(m\ge3\).
+Apply Lemma~\ref{lem:Gram-positive} in the Hilbert space
+\(M_n(\mathbb C)\) with its Hilbert--Schmidt inner product, to the
+components \(A_i^{1/2}(w_i)_a\). Then
+\[
+ \gQ_k(A_i;w_i)
+ =\sum_{a,b}(\gH_k)_{ab}
+       \ip{A_i^{1/2}(w_i)_a}{A_i^{1/2}(w_i)_b}_{\HS}\ge0.
+\]
+
+Proposition~\ref{prop:identity} and \(d_m>0\) prove \(\cB(X)\ge0\).
+
+For \(m=1\), \(A_1=S=T=\Id\), so \(\cB(X)=0\).
+For \(m=2\), write \(A_2=\Id-A_1\). Direct expansion gives
+\[
+ \Id+2\bigl(A_1^3+(\Id-A_1)^3\bigr)
+ =3\bigl(A_1^2+(\Id-A_1)^2\bigr),
+\]
+and hence \(T=S\). The two matrices \(A_i\) are simultaneously
+diagonalizable. In a common orthonormal eigenbasis write their
+diagonal entries as \(a_{ip}\), and put
+\[
+ s_p=\sum_{i=1}^2a_{ip}^2,\qquad
+ h_{pq}=\sum_{i=1}^2a_{ip}a_{iq}.
+\]
+
+For Hermitian \(X=(x_{pq})\),
+\[
+ \tr(XSXS)=\sum_{p,q}s_ps_q|x_{pq}|^2,\qquad
+ \nrm{\cK(X)}_{\HS}^2=\sum_{p,q}h_{pq}^2|x_{pq}|^2.
+\]
+
+Cauchy--Schwarz gives \(h_{pq}^2\le s_ps_q\).
+Therefore \(\cB(X)\ge0\) also for \(m=2\).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+The two inequalities follow from Theorem~\ref{thm:quadratic} and
+Lemma~\ref{lem:reduction}. The preceding proof also shows \(S=T\)
+for \(m=1,2\), giving the asserted identities in these cases.
+For any \(m\), the choice \(A_i=\Id/m\) gives
+\[
+ S=T=\frac1m\Id,
+\]
+so equality holds and the constant is sharp.
+
+It remains to prove uniqueness of equality in the positive definite
+domain when \(m\ge3\). Assume \(\det S=\det T\).
+Both inequalities in \eqref{eq:AMGM} must be equalities. In particular,
+\(\tr(T^{-1}S)=n\). Set \(X=T^{-1}\succ0\).
+Equations \eqref{eq:Phi-K} and \eqref{eq:universal-gram} give
+\[
+ 0=\Phi(X)=\nrm{\cK(X)-\Id}_{\HS}^2
+       +\frac1{d_m}\sum_i\gQ_k(A_i;w_i).
+\]
+
+Every summand is nonnegative; hence
+\(\gQ_k(A_i;w_i)=0\) for each \(i\).
+
+If \(m\ge4\), then \(k\ge3\) and \(\gH_k\succ0\).
+It follows that \(A_i^{1/2}E_{ij}=0\) for every \(j\ne i\).
+Since \(A_i\) is positive definite, \(E_{ij}=0\); thus
+\[
+ (A_j-A_i)XA_j=0.
+\]
+
+Both \(X\) and \(A_j\) are invertible, so \(A_j=A_i\).
+All matrices are therefore \(\Id/m\).
+
+If \(m=3\), then \(k=2\). Apply \eqref{eq:k2-kernel} to
+\(\ell_j=A_i^{1/2}E_{ij}\) and
+\(r_j=A_i^{1/2}F_{ij}\), with the two elements of \(J_i\)
+identified with \(1,2\).
+Canceling the invertible factor \(A_i^{1/2}\), the two
+\(E_{ij}\)'s have a common value \(E_i^0\), the two
+\(F_{ij}\)'s have a common value \(F_i^0\), and
+\[
+ 5E_i^0=7F_i^0.
+\]
+
+By \eqref{eq:EF}, \(F_i^0=(E_i^0)^*\). Taking adjoints also gives
+\(5F_i^0=7E_i^0\), whence \(E_i^0=F_i^0=0\).
+The same invertibility argument yields \(A_j=A_i\), completing the
+equality classification.
+\end{proof}
+
+\appendix
+\section{Exact expansion of the trace--Gram identity}
+\label{app:identity}
+
+This appendix provides the algebraic details of
+Proposition~\ref{prop:identity}. All reductions use only real trace
+identities, finite sums, and \(\sum_iA_i=\Id\).
+
+\subsection{Trace words and the complete coefficient table}
+
+For a word \(W\) in the symbols \(A,B,X\), define \(\Theta(W)\) as
+follows. Replace each distinct symbol among \(A,B\) occurring in \(W\)
+by an independently summed matrix \(A_i\), leave \(X\) fixed, and take
+the real part of the trace. For example,
+\[
+ \Theta(\word{AAAXBBX})
+   =\sum_{i,j}\Rea\tr(A_i^3XA_j^2X)=\tr(XRXS),
+ \qquad
+ \Theta(\word{AAXX})=\tr(X^2S).
+\]
+
+Different summation labels are independent and may have equal values.
+Cyclic rotation, reversal, and consistent renaming of the summed
+symbols leave \(\Theta\) unchanged. Reversal is valid because every
+letter represents a Hermitian matrix and the real trace is taken.
+Also,
+\[
+ \Theta(\word{ABXBAX})
+ =\sum_{i,j}\Rea\tr(A_iA_jXA_jA_iX)
+ =\nrm{\cK(X)}_{\HS}^2.
+\]
+
+Expand \(\sum_i\gQ_k(A_i;w_i)\) and separate its six contributions
+according to component types. The columns \(EF,EZ,FZ\) each include
+both orders of the corresponding cross terms. Table~\ref{tab:expansion}
+lists every nonzero word coefficient after setting \(k=m-1\).
+A blank entry means zero; all words not listed have zero coefficient.
+The entries are polynomials in \(m\), not values at selected integers.
+
+\begin{table}[!htbp]
+\centering
+\caption{Complete trace-word expansion of the six Gram blocks.}
+\label{tab:expansion}
+\begingroup
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.65}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+Word & \(EE\) & \(EF\) & \(EZ\) & \(FF\) & \(FZ\) & \(ZZ\)\\
+\midrule
+\(\word{AAAXBBX}\)&
+ \(\frac{m^2}2+m\)&&\(-m\)&&&\(\frac{m^2}2-m\)\\
+\(\word{AAAXX}\)&
+ \(\frac m2-2\)&&\(1\)&&&\(1-\frac m2\)\\
+\(\word{AABXABX}\)&&
+ \(m-m^2\)&\(m^2-m\)&&&\\
+\(\word{AABXBBX}\)&
+ \(-m^2-2m\)&\(m^2-m\)&\(2m\)&&&\(m\)\\
+\(\word{AABXBX}\)&
+ \(4-m\)&\(2m\)&\(-2-m\)&&&\(-2\)\\
+\(\word{AAXAAX}\)&
+ \(\frac{m^2}2+m\)&\(m-m^2\)&\(-m\)&
+ \(\frac{m^2}2-m\)&\(m\)&\(-m\)\\
+\(\word{AAXAX}\)&&
+ \(-2m\)&\(1\)&\(-2+\frac{5m}2\)&\(-2\)&\(3-\frac m2\)\\
+\(\word{AAXBABX}\)&&&&
+ \(\frac{m^2}2-m\)&\(2m-m^2\)&\(\frac{m^2}2-m\)\\
+\(\word{AAXX}\)&&&\(1\)&&&\\
+\(\word{ABAXABX}\)&&
+ \(m^2-m\)&\(m-m^2\)&\(2m-m^2\)&\(m^2-3m\)&\(m\)\\
+\(\word{ABAXBX}\)&&&&&\(m-1\)&\(1-m\)\\
+\(\word{ABXABX}\)&&&&&\(1\)&\(-1\)\\
+\(\word{ABXBAX}\)&
+ \(\frac m2-2\)&&\(m\)&\(2-\frac{5m}2\)&\(2-m\)&\(-1\)\\
+\(\word{AXAX}\)&&&\(-1\)&&&\(1\)\\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+Adding across each row leaves only
+\[
+ m(m-1)\Theta(\word{AAAXBBX})
+ +\Theta(\word{AAXX})
+ +(1-2m)\Theta(\word{ABXBAX}),
+\]
+which is \eqref{eq:expanded-target}.
+
+\subsection{Finite summation rules underlying the table}
+
+For completeness, we specify an exact procedure for obtaining all
+entries of Table~\ref{tab:expansion}, including the treatment of
+distinct indices. Before expansion, a term has one distinguished index
+\(i\) and at most four other index positions. Separate these terms
+according to the equality pattern of the latter positions, keeping
+\(i\) distinct from all of them. Each pattern is counted once and is
+summed over all assignments of pairwise distinct indices to its
+distinct labels. The Gram coefficient is determined by
+Table~\ref{tab:gram} for that pattern.
+
+The following finite inclusion--exclusion identity changes such
+distinct-index sums into unrestricted sums. For any function \(f\) of
+\(r\) indices in \(\{1,\ldots,m\}\),
+\begin{equation}\label{eq:partition-inversion}
+ \sum_{\substack{i_1,\ldots,i_r\\\text{pairwise distinct}}}
+ f(i_1,\ldots,i_r)
+ =
+ \sum_{\pi\in\Pi_r}
+ \left[\prod_{C\in\pi}(-1)^{|C|-1}(|C|-1)!\right]
+ \sum_{\substack{i_1,\ldots,i_r\\
+       i_a=i_b\ \text{if }a,b\in C\in\pi}}
+ f(i_1,\ldots,i_r).
+\end{equation}
+
+Here \(\Pi_r\) denotes the set of set partitions of \(\{1,\ldots,r\}\);
+indices belonging to different blocks in the inner sum remain
+independent and are allowed to coincide.
+
+To prove \eqref{eq:partition-inversion}, fix an assignment of all the
+indices and let \(\rho\) be its equality partition. Its coefficient on
+the right is the sum of the displayed partition weights over
+\(\pi\) refining \(\rho\). This factors over the blocks of \(\rho\).
+For a block of size \(s\), the factor is the sum of the signs of all
+permutations of \(s\) objects: a partition specifies their cycle
+supports, and a block of size \(t\) has \((t-1)!\) cyclic orderings,
+each contributing sign \((-1)^{t-1}\).
+The sign sum is \(1\) for \(s=1\) and \(0\) for \(s\ge2\), since
+composition with a fixed transposition pairs opposite signs.
+Thus the total coefficient is \(1\) exactly for pairwise distinct
+indices and \(0\) otherwise, as required.
+
+After applying \eqref{eq:partition-inversion}, expand each
+\(E,F,Z\) into its two or four monomials. Every resulting trace word
+initially has five \(A\)-factors and two \(X\)-factors, because each
+entry of \(w_i\) has two \(A\)-factors and one \(X\)-factor and
+\eqref{eq:gram-functional} inserts one additional \(A_i\).
+An unrestricted summed label appearing exactly once can be removed:
+summing its single matrix factor replaces it by
+\(\sum_iA_i=\Id\). A summed label absent from the word contributes
+a scalar factor \(m\). Consequently at most two matrix labels remain,
+as each remaining label occurs at least twice among at most five
+matrix factors.
+
+Finally identify words under cyclic rotation, reversal, and renaming
+of summed labels, choosing the lexicographically least representative
+after renaming labels by order of first occurrence. Expanding with
+these rules and collecting the six component types yields precisely
+Table~\ref{tab:expansion}. All operations involve at most five index
+labels, so \eqref{eq:partition-inversion} uses only \(r\le5\).
+This argument is valid also when \(r>m\), in which case the
+distinct-index sum is empty and the right side cancels to zero.
+Thus the table and the Gram identity hold for every integer
+\(m\ge3\) without an interpolation or limiting argument.
+
+\FloatBarrier
+\section{The accompanying exact certificate}\label{app:certificate}
+
+The sole accompanying program is
+\begin{center}
+ \texttt{stage6\_round2\_identity\_certificate.py}.
+\end{center}
+
+It independently checks \eqref{eq:universal-gram} by implementing the
+finite expansion rules of Appendix~\ref{app:identity}.
+Polynomial coefficients are stored exactly using rational numbers;
+the parameter \(m\) is indeterminate. Four auxiliary labels suffice
+to enumerate every equality pattern of a pair of component labels;
+the distinguished index gives at most five labels in
+\eqref{eq:partition-inversion}. The program collects the coefficients
+of the normalized trace words and checks that their sum is exactly
+\[
+ \Theta(\word{AAXX})+
+ (m^2-m)\Theta(\word{AAAXBBX})+
+ (1-2m)\Theta(\word{ABXBAX}).
+\]
+
+It uses only the Python standard library. Running
+\begin{verbatim}
+python3 stage6_round2_identity_certificate.py
+\end{verbatim}
+produces
+\begin{verbatim}
+PASS: symbolic identity for indeterminate m
+\end{verbatim}
+
+The certificate performs no matrix sampling, floating-point
+optimization, or extrapolation from finitely many values of \(m\).
+It is an optional verification of the algebraic identity.
+Positivity of the Gram family, the trace reduction, and the equality
+classification are proved analytically in the paper.
+
+\begin{thebibliography}{9}
+\bibitem{cubesteak}
+Cubesteak,
+\emph{Answer concerning the determinant inequality
+\(\det(\Id+6(A^3+B^3+C^3))\ge5^n\det(A^2+B^2+C^2)\)},
+Mathematics Stack Exchange, answer no.~5147902.
+\url{https://math.stackexchange.com/a/5147902}.
+\end{thebibliography}
+\end{document}
+
