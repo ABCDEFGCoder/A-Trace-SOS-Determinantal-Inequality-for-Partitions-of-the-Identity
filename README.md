@@ -7,4 +7,4 @@ Finally, in Aug 2026, a user named Cubesteak presented a remarkable proof to the
 
 The writer designed a general version of the original problem later. Specifically, we increased the number of matrices from 3 to m, where m is a fixed positive integer. Thus, the methods created by Cubesteak could not be applied directly, so the writer used GPT-6 Astra to explore the way.
 
-With the help of GPT-6 Astra, a powerful improvement to the original method which can resolve the general case was discovered, and the paper was presented here.
+With the help of GPT-6 Astra, a powerful improvement to the original method which can resolve the general case was discovered. The LaTeX file, PDF version of the paper and a necessary python certificate is presented here.
